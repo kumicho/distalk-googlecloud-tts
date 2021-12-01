@@ -100,13 +100,13 @@ async def on_message(message):
             match = re.findall(pattern, text)
             for user_id in match:
                 user = await client.fetch_user(user_id)
-                user_name = f'、{user.name}へのメンション、'
+                user_name = f'、{user.nickname}へのメンション、'
                 text = re.sub(rf'<@!?{user_id}>', user_name, text)
             pattern = r'<@&(\d+)>'
             match = re.findall(pattern, text)
             for role_id in match:
                 role = message.guild.get_role(int(role_id))
-                role_name = f'、{role.name}へのメンション、'
+                role_name = f'、{role.nickname}へのメンション、'
                 text = re.sub(f'<@&{role_id}>', role_name, text)
             pattern = r'<:([a-zA-Z0-9_]+):\d+>'
             match = re.findall(pattern, text)
@@ -119,7 +119,7 @@ async def on_message(message):
             text = re.sub(pattern, '、画像', text)
             pattern = r'https?://[\w/:%#\$&\?\(\)~\.=\+\-]+'
             text = re.sub(pattern, '、URL', text)
-            text = message.author.name + '、' + text
+            text = message.author.nickname + '、' + text
             if text[-1:] == 'w' or text[-1:] == 'W' or text[-1:] == 'ｗ' or text[-1:] == 'W':
                 while text[-2:-1] == 'w' or text[-2:-1] == 'W' or text[-2:-1] == 'ｗ' or text[-2:-1] == 'W':
                     text = text[:-1]
@@ -150,7 +150,7 @@ async def on_voice_state_update(member, before, after):
                 await after.channel.connect()
             else:
                 if member.guild.voice_client.channel is after.channel:
-                    text = member.name + 'さんが入室しました'
+                    text = member.nickname + 'さんが入室しました'
                     while member.guild.voice_client.is_playing():
                         await asyncio.sleep(0.5)
                     tts(text)
@@ -167,7 +167,7 @@ async def on_voice_state_update(member, before, after):
                         await asyncio.sleep(0.5)
                         await member.guild.voice_client.disconnect()
                     else:
-                        text = member.name + 'さんが退室しました'
+                        text = member.nickname + 'さんが退室しました'
                         while member.guild.voice_client.is_playing():
                             await asyncio.sleep(0.5)
                         tts(text)
