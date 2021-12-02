@@ -187,6 +187,41 @@ async def on_command_error(ctx, error):
     orig_error = getattr(error, 'original', error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
+    
+@client.event
+async def on_message(message):
+   Temp = " = " in message.content
+   if Temp == True:
+       if message.content.startswith(".add"):
+           input_Text = message.content.replace(".add ","")
+           dic_file = open("dictionary.dic","a")
+           dic_file.write(input_Text + "[SPL]")
+           dic_file.close()
+           await message.channel.send(input_Text + "を辞書に追加しました。")
+           print("[  log  ]辞書追加 : " + input_Text)    
+        if message.content.startswith(".del "):
+   input_Text = message.content.replace(".del ","")
+   dic_file = open("dictionary.dic","r")
+   dic_file_read = dic_file.read()
+   dic_file_read = dic_file_read.split("[SPL]")
+   dic_file_read.remove(input_Text)
+   dic_file.close()
+   dic_file = open("dictionary.dic","w")
+   dic_file_read = str(dic_file_read).replace("[","").replace("]","").replace("'","").replace(", ","[SPL]")
+   dic_file.write(dic_file_read)
+   dic_file.close()
+   await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
+   print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))
+    input_Message = message.content
+dic_file = open("dictionary.dic","r")
+dic_file_read = dic_file.read()
+dic_file_read = dic_file_read.split("[SPL]")
+dic_num = len(dic_file_read)
+for i in range(dic_num - 1):
+   dic_file_read_Temp = dic_file_read[i].split(" = ")
+   Text_A = dic_file_read_Temp[0]
+   Text_B = dic_file_read_Temp[1]
+   input_Message = input_Message.replace(Text_A,Text_B)
 
 @client.command()
 async def ヘルプ(ctx):
