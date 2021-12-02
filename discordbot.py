@@ -187,7 +187,30 @@ async def on_command_error(ctx, error):
     orig_error = getattr(error, 'original', error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
-    
+          
+
+@client.command()
+async def ヘルプ(ctx):
+    message = f'''◆◇◆{client.user.display_name}の使い方◆◇◆
+{prefix}＋コマンドで命令できます。
+{prefix}接続：ボイスチャンネルに接続します。
+{prefix}切断：ボイスチャンネルから切断します。'''
+    await ctx.send(message)
+
+def tts(message):
+    synthesis_input = texttospeech.SynthesisInput(text=message)
+    voice = texttospeech.VoiceSelectionParams(
+        language_code=tts_lang, name=tts_voice
+    )
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3, speaking_rate=1.2
+    )
+    response = tts_client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+    )
+    with open('/tmp/message.mp3', 'wb') as out:
+        out.write(response.audio_content)
+
 @client.event
 async def on_message(message):
    Temp = " = " in message.content
@@ -212,28 +235,6 @@ async def on_message(message):
            dic_file.close()
            await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
            print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))          
-
-@client.command()
-async def ヘルプ(ctx):
-    message = f'''◆◇◆{client.user.display_name}の使い方◆◇◆
-{prefix}＋コマンドで命令できます。
-{prefix}接続：ボイスチャンネルに接続します。
-{prefix}切断：ボイスチャンネルから切断します。'''
-    await ctx.send(message)
-
-def tts(message):
-    synthesis_input = texttospeech.SynthesisInput(text=message)
-    voice = texttospeech.VoiceSelectionParams(
-        language_code=tts_lang, name=tts_voice
-    )
-    audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3, speaking_rate=1.2
-    )
-    response = tts_client.synthesize_speech(
-        input=synthesis_input, voice=voice, audio_config=audio_config
-    )
-    with open('/tmp/message.mp3', 'wb') as out:
-        out.write(response.audio_content)
 
 
 client.run(token)
