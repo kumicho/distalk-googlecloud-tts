@@ -198,8 +198,7 @@ async def on_message(message):
            dic_file.write(input_Text + "[SPL]")
            dic_file.close()
            await message.channel.send(input_Text + "を辞書に追加しました。")
-           print("[  log  ]辞書追加 : " + input_Text) 
-       
+           print("[  log  ]辞書追加 : " + input_Text)        
 
 @client.command()
 async def ヘルプ(ctx):
