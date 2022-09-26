@@ -187,19 +187,61 @@ async def on_command_error(ctx, error):
     orig_error = getattr(error, 'original', error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
     await ctx.send(error_msg)
-    
-@client.event
-async def on_message(message):
-   Temp = " = " in message.content
-   if Temp == True:
-       if message.content.startswith(".add"):
-           input_Text = message.content.replace(".add ","")
-           dic_file = open("dictionary.dic","a")
-           dic_file.write(input_Text + "[SPL]")
-           dic_file.close()
-           await message.channel.send(input_Text + "を辞書に追加しました。")
-           print("[  log  ]辞書追加 : " + input_Text)    
 
+#辞書
+@bot.command()
+async def dict(ctx, *args):
+    if os.path.isfile(f"./dict/{ctx.guild.id}.json") == True:
+        with open(f"./dict/{ctx.guild.id}.json", "r", encoding="UTF-8")as f:
+            word = json.load(f)
+    else:
+        word = {}
+
+    if len(args) > 0:
+
+        if args[0] == "add" and len(args) == 3:
+            word[args[1]] = args[2]
+            with open(f"./dict/{ctx.guild.id}.json", "w", encoding="UTF-8")as f:
+                f.write(json.dumps(word, indent=2, ensure_ascii=False))
+            dict_add_embed = discord.Embed(title="辞書追加", color=0x3399cc)
+            dict_add_embed.add_field(name="単語", value=f"{args[1]}", inline="false")
+            dict_add_embed.add_field(name="読み", value=f"{args[2]}", inline="false")
+            await ctx.send(embed=dict_add_embed)
+            logger.info(f"辞書に{args[1]}を{args[2]}として追加しました")
+            return
+
+        if args[0] == "del" and len(args) == 2:
+            del word[args[1]]
+            with open(f"./dict/{ctx.guild.id}.json", "w", encoding="UTF-8")as f:
+                f.write(json.dumps(word, indent=2, ensure_ascii=False))
+            await ctx.channel.send(f"辞書から`{args[1]}`を削除しました")
+            logger.info(f"辞書から{args[1]}を削除しました")
+            return
+
+        if args[0] == "list" and len(args) == 1:
+            await ctx.channel.send("辞書を表示します")
+            logger.info(f"辞書を表示します")
+            await ctx.channel.send("```" + pprint.pformat(word, depth=1) + "```")
+            return
+
+        if args[0] == "help" and len(args) == 1:
+            dict_help_embed = discord.Embed(title="辞書機能ヘルプ", color=0x3399cc)
+            dict_help_embed.add_field(name=f"{PREFIX}dict add `word` `yomi`", value="`word`を`yomi`と読むように辞書に追加します。", inline="false")
+            dict_help_embed.add_field(name=f"{PREFIX}dict del `word`", value="`word`を辞書から削除します。", inline="false")
+            dict_help_embed.add_field(name=f"{PREFIX}dict list", value="現在登録されている辞書を表示します。", inline="false")
+            dict_help_embed.add_field(name=f"{PREFIX}dict help", value="このヘルプを表示します。", inline="false")
+            await ctx.send(embed=dict_help_embed)
+            logger.info("dict.helpを表示")
+            return
+
+        else:
+            await ctx.channel.send(f"コマンドが間違っています。`{PREFIX}dict help`を参照してください")
+            logger.info(f"コマンドが間違っています。`{PREFIX}dict help`を参照してください")
+
+    else:
+        await ctx.channel.send(f"コマンドが間違っています。`{PREFIX}dict help`を参照してください")
+        logger.info(f"コマンドが間違っています。`{PREFIX}dict help`を参照してください")    
+    
 @client.command()
 async def ヘルプ(ctx):
     message = f'''◆◇◆{client.user.display_name}の使い方◆◇◆
