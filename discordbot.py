@@ -60,6 +60,32 @@ async def on_guild_remove(guild):
     presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
     await client.change_presence(activity=discord.Game(name=presence))
 
+@client.event
+async def on_message(message):
+   Temp = " = " in message.content
+   if Temp == True:
+       if message.content.startswith(".add"):
+           input_Text = message.content.replace(".add ","")
+           dic_file = open("dictionary.dic","a")
+           dic_file.write(input_Text + "[SPL]")
+           dic_file.close()
+           await message.channel.send(input_Text + "を辞書に追加しました。")
+           print("[  log  ]辞書追加 : " + input_Text)
+     
+           if message.content.startswith(".del "):
+               input_Text = message.content.replace(".del ","")
+               dic_file = open("dictionary.dic","r")
+               dic_file_read = dic_file.read()
+               dic_file_read = dic_file_read.split("[SPL]")
+               dic_file_read.remove(input_Text)
+               dic_file.close()
+               dic_file = open("dictionary.dic","w")
+               dic_file_read = str(dic_file_read).replace("[","").replace("]","").replace("'","").replace(", ","[SPL]")
+               dic_file.write(dic_file_read)
+               dic_file.close()
+               await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
+               print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))    
+    
 @client.command()
 async def 接続(ctx):
     if ctx.message.guild:
@@ -213,30 +239,6 @@ def tts(message):
     with open('/tmp/message.mp3', 'wb') as out:
         out.write(response.audio_content)
 
-@client.event
-async def on_message(message):
-   Temp = " = " in message.content
-   if Temp == True:
-       if message.content.startswith(".add"):
-           input_Text = message.content.replace(".add ","")
-           dic_file = open("dictionary.dic","a")
-           dic_file.write(input_Text + "[SPL]")
-           dic_file.close()
-           await message.channel.send(input_Text + "を辞書に追加しました。")
-           print("[  log  ]辞書追加 : " + input_Text)
-     
-           if message.content.startswith(".del "):
-               input_Text = message.content.replace(".del ","")
-               dic_file = open("dictionary.dic","r")
-               dic_file_read = dic_file.read()
-               dic_file_read = dic_file_read.split("[SPL]")
-               dic_file_read.remove(input_Text)
-               dic_file.close()
-               dic_file = open("dictionary.dic","w")
-               dic_file_read = str(dic_file_read).replace("[","").replace("]","").replace("'","").replace(", ","[SPL]")
-               dic_file.write(dic_file_read)
-               dic_file.close()
-               await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
-               print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))
+
 
 client.run(token)
