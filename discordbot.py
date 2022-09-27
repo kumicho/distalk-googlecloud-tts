@@ -83,6 +83,7 @@ async def 切断(ctx):
             await ctx.send('ボイスチャンネルに接続していません。')
         else:
             await ctx.voice_client.disconnect()
+            
 @client.event
 async def on_message(message):
    Temp = " = " in message.content
@@ -109,17 +110,17 @@ async def on_message(message):
            await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
            print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))
            await bot.process_commands(message)
-       input_Message = message.content
-       dic_file = open("dictionary.dic","r")
-       dic_file_read = dic_file.read()
-       dic_file_read = dic_file_read.split("[SPL]")
-       dic_num = len(dic_file_read)
-       for i in range(dic_num - 1):
-            dic_file_read_Temp = dic_file_read[i].split(" = ")
-            Text_A = dic_file_read_Temp[0]
-            Text_B = dic_file_read_Temp[1]
-            input_Message = input_Message.replace(Text_A,Text_B)
-            await bot.process_commands(message)
+   input_Message = message.content
+   dic_file = open("dictionary.dic","r")
+   dic_file_read = dic_file.read()
+   dic_file_read = dic_file_read.split("[SPL]")
+   dic_num = len(dic_file_read)
+   for i in range(dic_num - 1):
+        dic_file_read_Temp = dic_file_read[i].split(" = ")
+        Text_A = dic_file_read_Temp[0]
+        Text_B = dic_file_read_Temp[1]
+        input_Message = input_Message.replace(Text_A,Text_B)
+        await bot.process_commands(message)
             
 @client.event
 async def on_message(message):
