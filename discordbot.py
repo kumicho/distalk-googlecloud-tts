@@ -94,7 +94,7 @@ async def on_message(message):
            dic_file.close()
            await message.channel.send(input_Text + "を辞書に追加しました。")
            print("[  log  ]辞書追加 : " + input_Text)
-             await bot.process_commands(message)
+           await bot.process_commands(message)
        if message.content.startswith(".del "):
            input_Text = message.content.replace(".del ","")
            dic_file = open("dictionary.dic","r")
