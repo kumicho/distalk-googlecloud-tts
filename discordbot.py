@@ -224,6 +224,23 @@ async def on_message(message):
            dic_file.close()
            await message.channel.send(input_Text + "を辞書に追加しました。")
            print("[  log  ]辞書追加 : " + input_Text)
-
+        
+@client.event
+async def on_message(message):
+   Temp = " = " in message.content
+   if Temp == True:
+       if message.content.startswith(".del "):
+           input_Text = message.content.replace(".del ","")
+           dic_file = open("dictionary.dic","r")
+           dic_file_read = dic_file.read()
+           dic_file_read = dic_file_read.split("[SPL]")
+           dic_file_read.remove(input_Text)
+           dic_file.close()
+           dic_file = open("dictionary.dic","w")
+           dic_file_read = str(dic_file_read).replace("[","").replace("]","").replace("'","").replace(", ","[SPL]")
+           dic_file.write(dic_file_read)
+           dic_file.close()
+           await message.channel.send(message.content.replace(".del ","") + "を辞書から削除しました。")
+           print("[  log  ]辞書削除 : " + message.content.replace(".del ",""))
 
 client.run(token)
