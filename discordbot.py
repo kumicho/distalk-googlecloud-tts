@@ -219,10 +219,10 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def dic(ctx, arg1, arg2):
-         with open('dictionary.txt', mode='a') as f:
-            f.write('\n'+ arg1 + ',' + arg2)
-            print('dictionary.txtに書き込み：''\n'+ arg1 + ',' + arg2)
-         await ctx.send('`' + arg1+'` を `'+arg2+'` として登録しました')	
+    with open('dictionary.txt', mode='a') as f:
+       f.write('\n'+ arg1 + ',' + arg2)
+       print('dictionary.txtに書き込み：''\n'+ arg1 + ',' + arg2)
+    await ctx.send('`' + arg1+'` を `'+arg2+'` として登録しました')	
 		
     
 @client.command()
