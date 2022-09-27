@@ -218,7 +218,7 @@ async def on_command_error(ctx, error):
     await ctx.send(error_msg)
 
 @client.command()
-    async def dic(ctx, arg1, arg2):
+async def dic(ctx, arg1, arg2):
          with open('dictionary.txt', mode='a') as f:
             f.write('\n'+ arg1 + ',' + arg2)
             print('dictionary.txtに書き込み：''\n'+ arg1 + ',' + arg2)
