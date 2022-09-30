@@ -60,7 +60,7 @@ async def on_guild_remove(guild):
     presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
     await client.change_presence(activity=discord.Game(name=presence))
 
-@client.event
+@client.command()
 async def on_message(message):
    Temp = " = " in message.content
    if Temp == True:
